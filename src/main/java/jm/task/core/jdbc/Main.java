@@ -1,29 +1,27 @@
 package jm.task.core.jdbc;
-import jm.task.core.jdbc.dao.UserDao;
-import jm.task.core.jdbc.dao.UserDaoJDBCImpl;
-import jm.task.core.jdbc.util.Util;
+
+import jm.task.core.jdbc.service.UserService;
+import jm.task.core.jdbc.service.UserServiceImpl;
+
 
 public class Main {
     public static void main(String[] args) {
-        Util util = new Util();
-        util.getConnection();
-        UserDao userDao = new UserDaoJDBCImpl();
-        userDao.createUsersTable();
-        userDao.saveUser("Stanislav", "Gorbachev", (byte) 22);
-        System.out.println("User с именем " + userDao.getAllUsers().get(0).getName() +
+        UserService userService = new UserServiceImpl();
+        userService.createUsersTable();
+        userService.saveUser("Stanislav", "Gorbachev", (byte) 22);
+        System.out.println("User с именем " + userService.getAllUsers().get(0).getName() +
                 " добавлен в базу данных");
-        userDao.saveUser("Dasha", "Li", (byte) 24);
-        System.out.println("User с именем " + userDao.getAllUsers().get(1).getName() +
+        userService.saveUser("Dasha", "Li", (byte) 24);
+        System.out.println("User с именем " + userService.getAllUsers().get(1).getName() +
                 " добавлен в базу данных");
-        userDao.saveUser("Sasha", "Ivanov", (byte) 27);
-        System.out.println("User с именем " + userDao.getAllUsers().get(2).getName() +
+        userService.saveUser("Sasha", "Ivanov", (byte) 27);
+        System.out.println("User с именем " + userService.getAllUsers().get(2).getName() +
                 " добавлен в базу данных");
-        userDao.saveUser("Denis", "Borodin", (byte) 25);
-        System.out.println("User с именем " + userDao.getAllUsers().get(3).getName() +
+        userService.saveUser("Denis", "Borodin", (byte) 25);
+        System.out.println("User с именем " + userService.getAllUsers().get(3).getName() +
                 " добавлен в базу данных");
-        userDao.getAllUsers().stream().forEach(System.out::println);
-        userDao.cleanUsersTable();
-        userDao.dropUsersTable();
-
+        userService.getAllUsers().stream().forEach(System.out::println);
+        userService.cleanUsersTable();
+        userService.dropUsersTable();
     }
 }
