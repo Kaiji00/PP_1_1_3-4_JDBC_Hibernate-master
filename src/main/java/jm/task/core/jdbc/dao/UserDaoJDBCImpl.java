@@ -1,5 +1,4 @@
 package jm.task.core.jdbc.dao;
-
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
 import java.util.ArrayList;
@@ -8,13 +7,14 @@ import java.sql.*;
 
 public class UserDaoJDBCImpl implements UserDao {
 
+
     private Util util = new Util();
-    private Connection connection = util.getConnection();
 
     public UserDaoJDBCImpl() {
     }
 
     public void createUsersTable() {
+        Connection connection = util.getConnection();
         String sql = "CREATE TABLE Users (id INT AUTO_INCREMENT PRIMARY KEY, " +
                 "name VARCHAR(15) NOT NULL, " +
                 "lastName VARCHAR(20) NOT NULL, " +
@@ -25,13 +25,20 @@ public class UserDaoJDBCImpl implements UserDao {
         } catch (SQLException e) {
             try {
                 connection.rollback();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
+            } catch (SQLException a) {
+            }
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException exc) {
+                }
             }
         }
     }
 
     public void dropUsersTable() {
+        Connection connection = util.getConnection();
         String sql = "DROP TABLE Users";
         try (var statement = connection.createStatement()) {
             statement.execute(sql);
@@ -40,12 +47,19 @@ public class UserDaoJDBCImpl implements UserDao {
             try {
                 connection.rollback();
             } catch (SQLException ex) {
-                ex.printStackTrace();
+            } finally {
+                if (connection != null) {
+                    try {
+                        connection.close();
+                    } catch (SQLException exc) {
+                    }
+                }
             }
         }
     }
 
     public void saveUser(String name, String lastName, byte age) {
+        Connection connection = util.getConnection();
         String sql = "INSERT INTO Users (name, lastName, age) VALUES(?, ?, ?)";
         try (var statement = connection.prepareStatement(sql)) {
             statement.setString(1, name);
@@ -57,12 +71,19 @@ public class UserDaoJDBCImpl implements UserDao {
             try {
                 connection.rollback();
             } catch (SQLException ex) {
-                ex.printStackTrace();
+            } finally {
+                if (connection != null) {
+                    try {
+                        connection.close();
+                    } catch (SQLException exc) {
+                    }
+                }
             }
         }
     }
 
     public void removeUserById(long id) {
+        Connection connection = util.getConnection();
         String sql = "DELETE FROM Users WHERE ID = ?";
         try (var statement = connection.prepareStatement(sql)) {
             statement.setLong(1, id);
@@ -72,12 +93,19 @@ public class UserDaoJDBCImpl implements UserDao {
             try {
                 connection.rollback();
             } catch (SQLException ex) {
-                ex.printStackTrace();
+            } finally {
+                if (connection != null) {
+                    try {
+                        connection.close();
+                    } catch (SQLException exc) {
+                    }
+                }
             }
         }
     }
 
     public List<User> getAllUsers() {
+        Connection connection = util.getConnection();
         List<User> users = new ArrayList<>();
         String sql = "SELECT * FROM Users";
         try (var statement = connection.createStatement()) {
@@ -95,13 +123,20 @@ public class UserDaoJDBCImpl implements UserDao {
             try {
                 connection.rollback();
             } catch (SQLException ex) {
-                throw new RuntimeException(ex);
+            } finally {
+                if (connection != null) {
+                    try {
+                        connection.close();
+                    } catch (SQLException exc) {
+                    }
+                }
             }
         }
         return users;
     }
 
     public void cleanUsersTable() {
+        Connection connection = util.getConnection();
         String sql = "TRUNCATE TABLE Users";
         try (var statement = connection.createStatement()) {
             statement.execute(sql);
@@ -110,7 +145,13 @@ public class UserDaoJDBCImpl implements UserDao {
             try {
                 connection.rollback();
             } catch (SQLException ex) {
-                throw new RuntimeException(ex);
+            } finally {
+                if (connection != null) {
+                    try {
+                        connection.close();
+                    } catch (SQLException exc) {
+                    }
+                }
             }
         }
     }
